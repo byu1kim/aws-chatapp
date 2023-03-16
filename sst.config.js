@@ -5,7 +5,7 @@ export default {
   config(_input) {
     return {
       name: "chatapp",
-      region: "us-west-2",
+      region: "us-east-1",
     };
   },
   stacks(app) {

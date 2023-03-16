@@ -8,9 +8,8 @@ export function FrontendStack({ stack, app }) {
     path: "frontend",
     buildOutput: "build",
     buildCommand: "npm build",
-    // Pass in our environment variables
     environment: {
-      REACT_APP_AB: "aaa",
+      REACT_APP_AB: "hoho",
       REACT_APP_API_URL: api.customDomainUrl || api.url,
     },
   });
