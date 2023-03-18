@@ -81,14 +81,14 @@ export async function getMessages(chat_id) {
   return res.rows;
 }
 
-export async function createMessage(chat_id, content) {
+export async function createMessage(chat_id, content, reply) {
   const res = await getPool().query(
     `
-    INSERT INTO messages (chat_id, content)
-    VALUES ($1, $2)
+    INSERT INTO messages (chat_id, content, reply)
+    VALUES ($1, $2, $3)
     RETURNING *
     `,
-    [chat_id, content]
+    [chat_id, content, reply]
   );
   return res.rows[0];
 }
