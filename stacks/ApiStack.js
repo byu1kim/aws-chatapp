@@ -1,6 +1,9 @@
-import { Api } from "sst/constructs";
+import { Api, Cognito } from "sst/constructs";
 
 export function API({ stack }) {
+  const auth = new Cognito(stack, "Auth", {
+    login: ["email", "username"],
+  });
   // we need api gateway
   const api = new Api(stack, "api", {
     defaults: {
@@ -22,10 +25,19 @@ export function API({ stack }) {
     },
   });
 
-  // you can define s3 bucket, cognito here as well
+  auth.attachPermissionsForAuthUsers(stack, [api]);
+
   stack.addOutputs({
     ApiEndpoint: api.url,
+    UserPoolId: auth.userPoolId,
+    IdentityPoolId: auth.cognitoIdentityPoolId ?? "",
+    UserPoolClientId: auth.userPoolClientId,
   });
 
-  return { api };
+  // you can define s3 bucket, cognito here as well
+  // stack.addOutputs({
+  //   ApiEndpoint: api.url,
+  // });
+
+  return { api, auth };
 }
