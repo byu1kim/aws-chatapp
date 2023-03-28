@@ -15,22 +15,25 @@ function getPool() {
 }
 
 // Chats
-export async function getChats() {
-  const res = await getPool().query(`
-  SELECT * FROM chats
+export async function getChats(user_id) {
+  const res = await getPool().query(
+    `
+  SELECT * FROM chats WHERE user_id = $1
   ORDER BY timestamp DESC
-  `);
+  `,
+    [user_id]
+  );
   return res.rows;
 }
 
-export async function createChat(name) {
+export async function createChat(name, user_id, username) {
   const res = await getPool().query(
     `
-  INSERT INTO chats (name)
-  VALUES ($1)
+  INSERT INTO chats (name, user_id, username)
+  VALUES ($1, $2, $3)
   RETURNING *
   `,
-    [name]
+    [name, user_id, username]
   );
   return res.rows[0];
 }
@@ -81,14 +84,14 @@ export async function getMessages(chat_id) {
   return res.rows;
 }
 
-export async function createMessage(chat_id, content, reply) {
+export async function createMessage(chat_id, user_id, username, content, reply) {
   const res = await getPool().query(
     `
-    INSERT INTO messages (chat_id, content, reply)
-    VALUES ($1, $2, $3)
+    INSERT INTO messages (chat_id, user_id, username, content, reply)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING *
     `,
-    [chat_id, content, reply]
+    [chat_id, user_id, username, content, reply]
   );
   return res.rows[0];
 }
